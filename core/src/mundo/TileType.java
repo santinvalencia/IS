@@ -13,18 +13,18 @@ public enum TileType {
 	public static final int TILE_SIZE = 32;
 	
 	private int id;
-	private boolean colisionable;
+	private boolean collidable;
 	private String name;
 	private float damage;
 	
-	private TileType (int id, boolean colisionable, String name) {
-		this(id, colisionable, name, 0);
+	private TileType (int id, boolean collidable, String name) {
+		this(id, collidable, name, 0);
 	}
 	
-	private TileType(int id, boolean colisionable, String name, float damage) {
+	private TileType (int id, boolean collidable, String name, float damage) {
 		this.id = id;
-		this.colisionable = colisionable;
-		this.name = name;
+		this.collidable = collidable;
+		this.name= name;
 		this.damage = damage;
 	}
 
@@ -32,8 +32,8 @@ public enum TileType {
 		return id;
 	}
 
-	public boolean isColisionable() {
-		return colisionable;
+	public boolean isCollidable() {
+		return collidable;
 	}
 
 	public String getName() {
@@ -46,7 +46,6 @@ public enum TileType {
 	
 	private static HashMap<Integer, TileType> tileMap;
 	
-	
 	static {
 		tileMap = new HashMap<Integer, TileType>();
 		for (TileType tileType : TileType.values()) {
@@ -54,7 +53,9 @@ public enum TileType {
 		}
 	}
 	
-	public static TileType getTypeById (int id) {
+	public static TileType getTileTypeById (int id) {
 		return tileMap.get(id);
 	}
+	
 }
+

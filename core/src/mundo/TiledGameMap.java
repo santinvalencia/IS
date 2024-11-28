@@ -1,6 +1,7 @@
 package mundo;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
@@ -23,9 +24,11 @@ public class TiledGameMap extends GameMap{
 	}
 
 	@Override
-	public void render(OrthographicCamera camera) {
+	public void render(OrthographicCamera camera, SpriteBatch batch) {
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
+		
+		super.render(camera, batch);
 	}
 
 	@Override

@@ -21,12 +21,14 @@ import ENUMS.Controles;
 import ENUMS.Velocidad;
 import HUD.NombreHud;
 import HUD.VidaHud;
+import entities.Player;
 import mundo.GameMap;
 import mundo.TileType;
 import mundo.TiledGameMap;
 public class Juego implements Screen{
 	OrthographicCamera cam;
 	SpriteBatch batch;	
+	GameMap gameMap;
 	final MyGdxGame game;
 	VidaHud VidaJairo;
 	VidaHud VidaCarlitos;
@@ -37,21 +39,26 @@ public class Juego implements Screen{
 	Jugador Jairo;
 	Texture fondo1;
 	Sound golpear1;
-	GameMap gameMap;
 	Stage stage;
+	Player echeverri;
 	
 	public Juego(MyGdxGame game) {
         this.game= game;
     }
 	@Override
 	public void show() {
-		batch = Render.batch;
+		batch = new SpriteBatch();
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
-		gameMap = new TiledGameMap();
+		
+		//
 		cam= new OrthographicCamera();
 		cam.setToOrtho(false, w, h);
 		cam.update();
+		gameMap = new TiledGameMap();
+		echeverri = new Player();
+		//
+		
 		stage = new Stage();
 		crearBotonMenu();
 		
@@ -104,7 +111,7 @@ public class Juego implements Screen{
 		
 		cam.update();
 		gameMap.update(Gdx.graphics.getDeltaTime());
-		gameMap.render(cam);
+		gameMap.render(cam, batch);
 		
 		
 		
@@ -205,4 +212,4 @@ private void detectarBloque() {
 			System.out.println("clickeaste en el tile con id: "+ type.getId()+ " llamado:"+ type.getName());
 		}
 }
-}
+}}
