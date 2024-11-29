@@ -8,19 +8,17 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 import mundo.GameMap;
 
-@SuppressWarnings("rawtypes")
 public enum EntityType {
 	
-	PLAYER("player", Player.class, 14, 32, 40);
+	ECHEVERRI("Echeverri", 32, 74, 70),
+	CARLITOS("Carlitos", 40, 56, 70);
 	
 	private String id;
-	private Class loaderClass;
 	private int width, height;
 	private float weight;
 	
-	private EntityType(String id, Class loaderClass, int width, int height, float weight) {
+	private EntityType(String id, int width, int height, float weight) {
 		this.id = id;
-		this.loaderClass = loaderClass;
 		this.width = width;
 		this.height = height;
 		this.weight = weight;
@@ -42,18 +40,6 @@ public enum EntityType {
 		return weight;
 	}
 	
-	public static Entity createEntityUsingSnapshot (EntitySnapshot entitySnapshot, GameMap map) {
-		EntityType type = entityTypes.get(entitySnapshot.type);
-		try {
-			@SuppressWarnings("unchecked")
-			Entity entity = (Entity) ClassReflection.newInstance(type.loaderClass);
-			entity.create(entitySnapshot, type, map);
-			return entity;
-		} catch (ReflectionException e) {
-			Gdx.app.error("Entity Loader", "Could not load entity of type " + type.id);
-			return null;
-		}
-	}
 	
 	private static HashMap<String, EntityType> entityTypes;
 	

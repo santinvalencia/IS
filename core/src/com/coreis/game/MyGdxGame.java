@@ -28,9 +28,6 @@ public class MyGdxGame extends Game {
 	}
 	
 
-	public FitViewport getViewport() {
-		return viewport;
-	}
 
 	public void render () {
 		super.render();

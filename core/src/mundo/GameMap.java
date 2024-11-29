@@ -8,7 +8,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import entities.Entity;
-import entities.EntityLoader;
+import entities.EntityType;
+import entities.Player;
 
 public abstract class GameMap {
 	
@@ -16,7 +17,8 @@ public abstract class GameMap {
 	
 	public GameMap() {
 		entities = new ArrayList<Entity>();
-		
+		entities.add(new Player(100, 300, EntityType.ECHEVERRI, this, "echeverri.png"));
+		entities.add(new Player(1000, 400, EntityType.CARLITOS, this, "carlitos.png"));
 	}
 	
 	public void render (OrthographicCamera camera, SpriteBatch batch) {
@@ -27,14 +29,16 @@ public abstract class GameMap {
 	
 	public void update (float delta) {
 		for (Entity entity : entities) {
-			entity.update(delta, -9.8f);
+			entity.update(delta, -10.8f);
 		}
 		
-		if (Gdx.input.isKeyJustPressed(Keys.S)) {
-			EntityLoader.saveEntities("basic", entities);
-		}
+		
 	}
 	
+	public ArrayList<Entity> getEntities() {
+		return entities;
+	}
+
 	public void dispose () {
 		
 	}

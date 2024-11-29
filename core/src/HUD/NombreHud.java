@@ -10,8 +10,9 @@ import com.coreis.game.utiles.EstiloFuente;
 
 import ENUMS.Controles;
 import Interfaces.HUD;
+import entities.Entity;
 
-public class NombreHud implements HUD{
+public class NombreHud{
 
 	private Stage stage;
 	private ScreenViewport vw;
@@ -20,39 +21,53 @@ public class NombreHud implements HUD{
 	private Label.LabelStyle estiloFuente, estiloPeligro, fuenteAdvertencia;
 	
 	
-	public NombreHud(Jugador j) {
+	public NombreHud(Entity e) {
 		crearFuentes(); // Primero crear las fuentes
-	    crearActores(j); // Después de crear las fuentes
-	    poblarStage(j);
-	    refrescarTexto(j);
+	    crearActores(e); // Después de crear las fuentes
+	    poblarStage(e);
+	    refrescarTexto(e);
+	    stage.setDebugAll(false);
+	}
+	public NombreHud(Entity e, String a) {
+		crearFuentes(); // Primero crear las fuentes
+	    crearActores2(e); // Después de crear las fuentes
+	    poblarStage(e);
+	    refrescarTexto(e);
 	    stage.setDebugAll(false);
 	}
 
-	@Override
 	public void crearFuentes() {
 		estiloFuente = EstiloFuente.generarFuente(50, Colores.BLANCO, false);
 		
 	}
 
-	@Override
-	public void crearActores(Jugador j) {
+	public void crearActores(Entity e) {
 		vw = new ScreenViewport();
 		stage = new Stage(vw);
 		tabla = new Table();
-		if(j.getTipo() == Controles.JUGADOR1 ) {
+		if(e.getType().getId() == "Carlitos") {
 			tabla.setPosition(stage.getWidth()/stage.getWidth()+300, stage.getHeight()-50);
 		}
-		if(j.getTipo() == Controles.JUGADOR2) {
+		if(e.getType().getId() == "Echeverri") {
 			tabla.setPosition(stage.getWidth()-200,stage.getHeight()-50);
 		}
 		contenedor = new Table();
-		etiqueta = new Label(""+j.getNombre(), estiloFuente);
+		etiqueta = new Label(""+e.getType().getId(), estiloFuente);
+		
+		
+	}
+	public void crearActores2(Entity e) {
+		vw = new ScreenViewport();
+		stage = new Stage(vw);
+		tabla = new Table();
+		tabla.setPosition(625, stage.getHeight()-350);
+		contenedor = new Table();
+		etiqueta = new Label(""+e.getType().getId(), estiloFuente);
 		
 		
 	}
 
-	@Override
-	public void poblarStage(Jugador j) {
+	public void poblarStage(Entity e) {
 		stage.addActor(tabla);
 		tabla.add(contenedor).size(300,100);
 		contenedor.add(etiqueta).size(300,100);
@@ -60,14 +75,12 @@ public class NombreHud implements HUD{
 		
 	}
 
-	@Override
 	public void dibujar() {
 		stage.draw();
 	}
 
-	@Override
-	public void refrescarTexto(Jugador j) {
-		etiqueta.setText(j.getNombre());
+	public void refrescarTexto(Entity e) {
+		etiqueta.setText(e.getType().getId());
 		
 	}
 

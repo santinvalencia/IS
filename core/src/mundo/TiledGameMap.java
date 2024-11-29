@@ -33,7 +33,7 @@ public class TiledGameMap extends GameMap{
 
 	@Override
 	public void update(float delta) {
-		
+		super.update(delta);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class TiledGameMap extends GameMap{
     		
     		if (tile != null) {
     			int id = tile.getId();
-    			TileType type = TileType.getTypeById(id);
+    			TileType type = TileType.getTileTypeById(id);
     			return type;
     		}
     	}

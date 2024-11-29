@@ -1,5 +1,6 @@
 package entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -12,14 +13,15 @@ public abstract class Entity {
 	protected float velocityY = 0;
 	protected GameMap map;
 	protected boolean grounded = false;
+	protected int vida = 100;
 	
-	public void create (EntitySnapshot snapshot, EntityType type, GameMap map) {
-		this.pos = new Vector2(snapshot.getX(), snapshot.getY());
+	public Entity(float x, float y, GameMap map) {
+		this.pos = new Vector2(x, y);
 		this.type = type;
 		this.map = map;
 	}
-	
-	
+
+
 	public void update (float deltaTime, float gravity) {
 		float newY = pos.y;
 		
@@ -32,9 +34,12 @@ public abstract class Entity {
 				grounded = true;
 			}
 			this.velocityY = 0;
+			
+			
 		} else {
 			this.pos.y = newY;
 			grounded = false;
+			
 		}
 	}
 	
@@ -46,9 +51,6 @@ public abstract class Entity {
 			this.pos.x = newX;
 	}
 	
-	public EntitySnapshot getSaveSnapshot () {
-		return new EntitySnapshot(type.getId(), pos.x, pos.y);
-	}
 	
 	public Vector2 getPos() {
 		return pos;
@@ -58,6 +60,11 @@ public abstract class Entity {
 		return pos.x;
 	}
 	
+	public void setVida(int vida) {
+		this.vida = vida;
+	}
+
+
 	public float getY () {
 		return pos.y;
 	}
@@ -81,6 +88,14 @@ public abstract class Entity {
 	public float getWeight() {
 		return type.getWeight();
 	}
+
+
+	public int getVida() {
+		return vida;
+	}
+
+	
+	
 
 	
 	

@@ -21,6 +21,7 @@ import ENUMS.Controles;
 import ENUMS.Velocidad;
 import HUD.NombreHud;
 import HUD.VidaHud;
+import entities.Entity;
 import entities.Player;
 import mundo.GameMap;
 import mundo.TileType;
@@ -39,15 +40,16 @@ public class Juego implements Screen{
 	Jugador Jairo;
 	Texture fondo1;
 	Sound golpear1;
+	Sound ost;
+	boolean ostBool = false;
 	Stage stage;
-	Player echeverri;
 	
 	public Juego(MyGdxGame game) {
         this.game= game;
     }
 	@Override
 	public void show() {
-		batch = new SpriteBatch();
+		batch = Render.batch;
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
@@ -56,7 +58,6 @@ public class Juego implements Screen{
 		cam.setToOrtho(false, w, h);
 		cam.update();
 		gameMap = new TiledGameMap();
-		echeverri = new Player();
 		//
 		
 		stage = new Stage();
@@ -65,21 +66,10 @@ public class Juego implements Screen{
 		
 		
 		fondo1 = new Texture(Recursos.FONDOJUEGO2);
-		Jairo = new Jugador(2, 1000,0,
-				"Jairo",100, Velocidad.NORMAL,
-				new Texture("jairo.png"),Controles.JUGADOR2);
-		
-		
-		Carlitos = new Jugador (
-				1, 0,0,
-				"Carlitos", 100, Velocidad.NORMAL,
-				new Texture("carlitos.png"),
-				Controles.JUGADOR1
-				);
-		VidaJairo = new VidaHud(Jairo);
-		VidaCarlitos = new VidaHud(Carlitos);
-		NombreJairo = new NombreHud(Jairo);
-		NombreCarlitos = new NombreHud(Carlitos);
+		VidaJairo = new VidaHud(gameMap.getEntities().get(0));
+		VidaCarlitos = new VidaHud(gameMap.getEntities().get(1));
+		NombreJairo = new NombreHud(gameMap.getEntities().get(0));
+		NombreCarlitos = new NombreHud(gameMap.getEntities().get(1));
 		fondo1 = new Texture(Recursos.FONDOJUEGO);
 		
 	}
@@ -87,22 +77,24 @@ public class Juego implements Screen{
 	@Override
 	public void render(float delta) {
 		Render.limpiarPantalla();
-		sonidoGolpe(Keys.F);
-		Jairo.MovimientoJ2();
-		Carlitos.MovimientoJ1();
-		CaidaLibre(Jairo);
-		CaidaLibre(Carlitos);
-		VidaJairo.refrescarTexto(Jairo);
-		VidaCarlitos.refrescarTexto(Carlitos);
-		NombreJairo.refrescarTexto(Jairo);
-		NombreCarlitos.refrescarTexto(Carlitos);
-//		detectarBloque();
+		sonidoOST();
+		VidaJairo.refrescarTexto(gameMap.getEntities().get(0));
+		VidaCarlitos.refrescarTexto(gameMap.getEntities().get(1));
+		NombreJairo.refrescarTexto(gameMap.getEntities().get(1));
+		NombreCarlitos.refrescarTexto(gameMap.getEntities().get(0));
+		if (gameMap.getEntities().get(0).getVida()<= 0) {
+			game.setScreen(new JuegoTerminado(game, gameMap.getEntities().get(0)));
+			ost.stop();
+		}else if (gameMap.getEntities().get(1).getVida() <= 0) {
+			game.setScreen(new JuegoTerminado(game, gameMap.getEntities().get(1)));
+			ost.stop();
+		}
 		
+		quitarVida(gameMap.getEntities().get(1), Keys.V);
+		quitarVida(gameMap.getEntities().get(0), Keys.B);
 		
 		batch.begin();
 		batch.draw(fondo1, 0, 0);
-		batch.draw(Jairo.getImg(), Jairo.getPosX(),Jairo.getPosY());
-		batch.draw(Carlitos.getImg(), Carlitos.getPosX(),Carlitos.getPosY());
 			
 		batch.end();
 		stage.draw();
@@ -111,12 +103,12 @@ public class Juego implements Screen{
 		
 		cam.update();
 		gameMap.update(Gdx.graphics.getDeltaTime());
-		gameMap.render(cam, batch);
+		
 		
 		
 		
 		batch.begin();
-		
+		gameMap.render(cam, batch);
 		VidaJairo.dibujar();
 		VidaCarlitos.dibujar();
 		NombreJairo.dibujar();
@@ -126,25 +118,22 @@ public class Juego implements Screen{
 		
 	}
 	
-	public void sonidoGolpe(int a) {
-		if(Gdx.input.isKeyJustPressed(a)) {
-			golpear1 = Gdx.audio.newSound(Gdx.files.internal("sonidos/GOLPEAR1.ogg"));
-			golpear1.setVolume(0, 55);
-			golpear1.play();
+	
+	public void sonidoOST() {
+		if(!ostBool) {
+			ost = Gdx.audio.newSound(Gdx.files.internal("sonidos/ost2.ogg"));
+			ost.setVolume(100, 25);
+			ost.play();
+			ostBool = true;
 		}
 		
 	}
-	public void CaidaLibre(Jugador j) {
-		if(j.getPosY()<0) {
-			j.setPosY(0);
-		}
-		if(j.getPosY()>0) {
-		j.setPosY(j.getPosY()-2);
-		}
-	}
-	public void quitarVida(Jugador j, int a) {
+	public void quitarVida(Entity e, int a) {
 		if(Gdx.input.isKeyJustPressed(a)) {
-			j.setVida(j.getVida()-1);
+			e.setVida(e.getVida()-10);
+			golpear1 = Gdx.audio.newSound(Gdx.files.internal("sonidos/GOLPEAR1.ogg"));
+			golpear1.setVolume(0, 55);
+			golpear1.play();
 		}
 		
 	}
@@ -173,6 +162,7 @@ public class Juego implements Screen{
 		// TODO Auto-generated method stub
 		batch.dispose();
 		gameMap.dispose();
+		ost.dispose();
 	}
 	
 private void crearBotonMenu() {
@@ -194,6 +184,7 @@ private void crearBotonMenu() {
         	public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
         		super.touchUp(event, x, y, pointer, button);
         		game.setScreen(new PantallaMenu(game));
+        		ost.stop();
         	}
         });
 		

@@ -72,13 +72,26 @@ import com.coreis.game.utiles.Render;
 	        	}
 	        });
 	        
+	        creditos.addCaptureListener(new InputListener() {
+	        	@Override
+	        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+	        		// TODO Auto-generated method stub
+	        		return true;
+	        	}
+	        	@Override
+	        	public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+	        		super.touchUp(event, x, y, pointer, button);
+	        		game.setScreen(new Credits(game));
+	        	}
+	        });
+	        
 	        //////////////////////////////
 	        
 	    }
 	   @Override
 	   	
 	    public void show() { 
-		   batch = new SpriteBatch();
+		   batch = Render.batch;
 		   fondo = new Texture(Recursos.MENUSCREEN);
 		    fondo1 = new Texture(Recursos.FONDOJUEGO2);
 		  

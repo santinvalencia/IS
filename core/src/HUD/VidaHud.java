@@ -12,8 +12,10 @@ import com.coreis.game.utiles.EstiloFuente;
 
 import ENUMS.Controles;
 import Interfaces.HUD;
+import entities.Entity;
+import entities.EntityType;
 
-public class VidaHud implements HUD{
+public class VidaHud{
 
 	private Stage stage;
 	private ScreenViewport vw;
@@ -22,40 +24,40 @@ public class VidaHud implements HUD{
 	private Label.LabelStyle estiloFuente, estiloPeligro, fuenteAdvertencia;
 	
 
-	public VidaHud(Jugador j) {
+	public VidaHud(Entity e) {
 	    crearFuentes(); // Primero crear las fuentes
-	    crearActores(j); // Después de crear las fuentes
-	    poblarStage(j);
-	    refrescarTexto(j);
+	    crearActores(e); // Después de crear las fuentes
+	    poblarStage(e);
+	    refrescarTexto(e);
 	    stage.setDebugAll(false);
 	}
 
-	@Override
-	public void refrescarTexto(Jugador j) {
-		etiqueta.setText(j.getVida());
+	
+	public void refrescarTexto(Entity e) {
+		etiqueta.setText(e.getVida());
 		
 	}
 	
 	
-	@Override
-	public void crearActores(Jugador j) {
+	
+	public void crearActores(Entity e) {
 		vw = new ScreenViewport();
 		stage = new Stage(vw);
 		tabla = new Table();
-		if(j.getTipo() == Controles.JUGADOR1 ) {
+		if(e.getType() == EntityType.CARLITOS ) {
 			tabla.setPosition(stage.getWidth()/stage.getWidth()+50, stage.getHeight()-50);;
 		}
-		if(j.getTipo() == Controles.JUGADOR2) {
+		if(e.getType() == EntityType.ECHEVERRI) {
 			tabla.setPosition(stage.getWidth()-100, stage.getHeight()-50);
 		}
 		contenedor = new Table();
-		etiqueta = new Label(""+j.getVida(), estiloFuente);
+		etiqueta = new Label(""+e.getVida(), estiloFuente);
 		
 	}
 
 	
-	@Override
-	public void poblarStage(Jugador j) {
+	
+	public void poblarStage(Entity e) {
 		stage.addActor(tabla);
 		tabla.add(contenedor).size(100,100);
 		contenedor.add(etiqueta).size(100,100);
@@ -63,14 +65,14 @@ public class VidaHud implements HUD{
 		
 	}
 
-	@Override
+	
 	public void dibujar() {
 		stage.draw();//Dibujar el hud
 		
 	}
 
 	
-	@Override
+	
 	public void crearFuentes() {
 		estiloFuente = EstiloFuente.generarFuente(50, Colores.VERDE, false);
 	}
